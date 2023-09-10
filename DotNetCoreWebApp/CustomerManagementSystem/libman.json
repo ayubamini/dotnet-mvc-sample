@@ -25,6 +25,14 @@
     {
       "library": "datatables.net-responsive-bs5@2.5.0",
       "destination": "wwwroot/lib/datatables.net-responsive-bs5/"
+    },
+    {
+      "library": "datatables.net-dt@2.1.1",
+      "destination": "wwwroot/lib/datatables.net-dt/"
+    },
+    {
+      "library": "datatables.net-se@1.13.6",
+      "destination": "wwwroot/lib/datatables.net-se/"
     }
   ]
 }

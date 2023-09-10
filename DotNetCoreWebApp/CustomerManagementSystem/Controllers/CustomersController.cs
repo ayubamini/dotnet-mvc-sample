@@ -16,9 +16,15 @@ namespace CustomerManagementSystem.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(_mapper.Map<List<CustomerVM>>(await _customerRepository.GetAllAsync()));
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoadPartialList()
+        {
+            return PartialView("_List", _mapper.Map<List<CustomerVM>>(await _customerRepository.GetAllAsync()));
         }
 
         public async Task<IActionResult> Details(int? id)

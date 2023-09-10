@@ -1,1 +1,1 @@
-# dotnet-mvc-sample
+# AspNetCore MVC Sample

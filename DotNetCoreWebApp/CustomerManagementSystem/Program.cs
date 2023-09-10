@@ -1,5 +1,8 @@
+global using Microsoft.EntityFrameworkCore;
+
 using CustomerManagementSystem.DATA.Context;
-using Microsoft.EntityFrameworkCore;
+using CustomerManagementSystem.Mapper;
+using CustomerManagementSystem.Repositories.Customers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,11 @@ builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(connectionString));
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+// Register services
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
 var app = builder.Build();
 

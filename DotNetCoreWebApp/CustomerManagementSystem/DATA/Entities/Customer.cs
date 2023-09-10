@@ -13,8 +13,7 @@ namespace CustomerManagementSystem.DATA.Entities
         [StringLength(256)]
         public string? LastName { get; set; }
 
-        [Required]
         [StringLength(256)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
     }
 }

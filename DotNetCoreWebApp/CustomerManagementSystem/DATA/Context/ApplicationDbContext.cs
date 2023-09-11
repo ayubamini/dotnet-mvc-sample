@@ -20,7 +20,9 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Customer> Customers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+    {
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+    }     
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

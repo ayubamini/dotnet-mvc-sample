@@ -6,45 +6,46 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 <link href="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.css" rel="stylesheet" />
 <link href="~/lib/datatables.net-responsive-bs5/responsive.bootstrap5.min.css" rel="stylesheet" />
-<link href="~/lib/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <form id="mainForm" method="post">
+<form id="mainForm" method="post">
+    <input name="SelectedId" id="SelectedId" type="hidden" />
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5>Customers List</h5>                   
+                    <h5 class="float-start mt-1">Customers List</h5>
+                    <a class="btn btn-success float-end" asp-action="Create"><i class="fas fa-plus-circle"></i> New Customer</a>
                 </div>
                 <div class="card-body">
-                    <input name="SelectedId" id="SelectedId" type="hidden" />
-                    <div class="text-end mb-2">
-                        <a class="btn btn-success text-end" asp-action="Create"><i class="fas fa-plus-circle"></i> New Customer</a>
-                    </div>
                     
                     <!-- Loader -->
                     <div class="overlay loader text-center" hidden="hidden">
                         <i class="fas fa-2x fa-sync-alt fa-spin"></i>
                     </div>
+
+                    <!-- partial view -->
                     <div id="partial" hidden="hidden">
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-<br />
-
+</form>
 
 @section Scripts {
+
+    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
 
     <script src="~/lib/datatables.net/jquery.dataTables.min.js"></script>
     <script src="~/lib/datatables.net-bs5/dataTables.bootstrap5.min.js"></script>
     <script src="~/lib/datatables-responsive/dataTables.responsive.min.js"></script>
     <script src="~/lib/datatables.net-responsive-bs5/responsive.bootstrap5.min.js"></script>
 
-    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
     <script>
 
         $(function () {
@@ -52,8 +53,9 @@
             $('#partial').attr("hidden", "hidden");
             $(".loader").removeAttr("hidden", "hidden");
 
-            loadPartialView();            
-        });
+            loadPartialView();
+
+        });        
 
         function loadPartialView() {
 
@@ -77,11 +79,6 @@
                 }
             });
         }
-
-
-        
-
-
 
     </script>
 

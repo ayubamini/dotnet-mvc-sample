@@ -1,1 +1,2 @@
-# AspNetCore MVC Sample
+# AspNetCore Sample with Server Side Datatables.net
+

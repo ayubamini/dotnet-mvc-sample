@@ -4,7 +4,11 @@ namespace CustomerManagementSystem.Repositories.Customers
 {
     public interface ICustomerRepository : IRepositoryBaseAsync<Customer>
     {
-        new Task<List<Customer>> GetAllAsync();
+        IQueryable<Customer> GetAll();
+
+        Task<List<Customer>> GetAll(int pageSize, int pageNumber);
+
+        Task<int> GetNumberOfCustomers();
 
         Task RemoveAsync(Customer customer);
     }

@@ -1,5 +1,6 @@
 ﻿using CustomerManagementSystem.DATA.Context;
 using CustomerManagementSystem.DATA.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerManagementSystem.Repositories.Customers
 {
@@ -12,9 +13,26 @@ namespace CustomerManagementSystem.Repositories.Customers
             _context = context;
         }
 
-        public new async Task<List<Customer>> GetAllAsync()
+        public IQueryable<Customer> GetAll()
         {
-            var result = await _context.Set<Customer>().OrderBy(q => q.Id).ToListAsync();
+            var result = _context.Set<Customer>().AsQueryable();
+
+            return result;
+        }
+
+        public async Task<List<Customer>> GetAll(int pageSize, int pageNumber)
+        {
+            var result = await _context.Set<Customer>()
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+               .OrderBy(c => c.Id).ToListAsync();
+
+            return result;
+        }
+
+        public async Task<int> GetNumberOfCustomers()
+        {
+            var result = await _context.Set<Customer>().CountAsync();
 
             return result;
         }

@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CustomerManagementSystem.DATA.Entities;
 using CustomerManagementSystem.Repositories.Customers;
-using AutoMapper;
 using CustomerManagementSystem.Models.CustomerViewModel;
+using CustomerManagementSystem.Models;
+using AutoMapper;
+using CustomerManagementSystem.Extensions;
+using System.Linq.Dynamic.Core;
 
 namespace CustomerManagementSystem.Controllers
 {
@@ -22,9 +25,66 @@ namespace CustomerManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoadPartialList()
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoadPartialList(DataTablesRequest request)
         {
-            return PartialView("_List", _mapper.Map<List<CustomerVM>>(await _customerRepository.GetAllAsync()));
+            if (request == null)
+            {
+                return BadRequest("error");
+            }
+
+            int pageNumber = request.Start / request.Length + 1;
+            int pageSize = request.Length;
+
+            var query = _customerRepository.GetAll(pageSize, pageNumber).Result.AsQueryable();
+
+            // Apply sorting
+            if (request.Order != null)
+            {
+                foreach (var order in request.Order)
+                {
+                    var column = request.Columns[order.Column];
+                    var columnName = column.Data;
+
+                    if (order.Dir == "asc")
+                        query = query.OrderByDynamic(columnName);
+                    else
+                        query = query.OrderByDynamicDescending(columnName);
+                }
+            }
+
+            // Apply filtering
+            if (request.Columns != null)
+            {
+                foreach (var column in request.Columns)
+                {
+                    var searchValue = column.Search.Value;
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        query = query.Where(c =>
+                            c.FirstName!.Contains(searchValue) ||
+                            c.LastName!.Contains(searchValue) ||
+                            c.Email!.Contains(searchValue));
+                    }
+                }
+            }            
+
+            var totalRecords = await _customerRepository.GetNumberOfCustomers();
+
+            //query = query.Skip(request.Start).Take(request.Length);
+            query = query.Take(request.Length);
+
+            var customers = query.ToList();
+
+            var response = new
+            {
+                draw = request.Draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = customers
+            };
+
+            return Json(response);
         }
 
         public async Task<IActionResult> Details(int? id)
